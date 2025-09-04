@@ -1,1 +1,603 @@
+<html lang="zh-CN"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>童话王国小组积分</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- 配置童话风格的颜色 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'fairy-blue': '#6ea8fe',    // 童话蓝
+                        'fairy-pink': '#f9a8d4',    // 童话粉
+                        'fairy-green': '#a7f3d0',   // 童话绿
+                        'fairy-purple': '#c084fc',  // 童话紫
+                        'fairy-yellow': '#fde68a',  // 童话黄
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .fairy-shadow {
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.05);
+            }
+            .btn-fairy {
+                @apply transition-all duration-300 hover:scale-110 active:scale-95 shadow-md hover:shadow-lg;
+            }
+            .point-pulse {
+                animation: bounce 0.6s ease-in-out;
+            }
+            @keyframes bounce {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.15) rotate(2deg); }
+            }
+            .fairy-border {
+                border-radius: 24px;
+            }
+            .crown {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            }
+            .float {
+                animation: float 3s ease-in-out infinite;
+            }
+            @keyframes float {
+                0%, 100% { transform: translateY(0); }
+                50% { transform: translateY(-8px); }
+            }
+            .plus-one {
+                position: absolute;
+                color: #22c55e;
+                font-weight: bold;
+                animation: rise 1s ease-out forwards;
+                pointer-events: none;
+                z-index: 10;
+            }
+            @keyframes rise {
+                0% { transform: translateY(0); opacity: 1; }
+                100% { transform: translateY(-30px); opacity: 0; }
+            }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-5xl">
+        <!-- 标题区域 - 童话风格 -->
+        <header class="text-center mb-8">
+            <div class="inline-block relative">
+                <h1 class="text-[clamp(2rem,5vw,3rem)] font-bold text-purple-800 mb-2 relative z-10">
+                    <i class="fa fa-star text-fairy-yellow animate-pulse mr-2"></i>
+                    童话王国积分赛
+                    <i class="fa fa-star text-fairy-yellow animate-pulse ml-2"></i>
+                </h1>
+                <div class="absolute -bottom-3 left-0 w-full h-3 bg-fairy-yellow/30 rounded-full -z-10"></div>
+            </div>
+            <p class="text-purple-600 text-lg mt-4">勇敢的小勇士们，一起争夺魔法皇冠吧！</p>
+        </header>
+        
+        <!-- 小组积分卡片区域 - 童话风格设计 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10" id="teams-container">
+            <!-- 小组1 - 蓝色童话风格 -->
+            <div class="team-card bg-white fairy-border p-6 fairy-shadow relative overflow-hidden transition-all duration-500 hover:translate-y-[-5px]" data-team="1">
+                <!-- 装饰元素 -->
+                <div class="absolute top-2 left-2 text-fairy-blue opacity-70 float">
+                    <i class="fa fa-cloud"></i>
+                </div>
+                
+                <!-- 排名徽章 -->
+                <div class="rank-badge absolute -top-4 left-1/2 transform -translate-x-1/2 w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-lg" id="rank-1">
+                    <i class="fa fa-crown crown"></i>
+                </div>
+                
+                <!-- 小组图标 -->
+                <div class="w-20 h-20 bg-fairy-blue/20 rounded-full flex items-center justify-center mx-auto mb-4 mt-2">
+                    <i class="fa fa-ship text-3xl text-fairy-blue"></i>
+                </div>
+                
+                <!-- 小组名称 -->
+                <h2 class="text-center text-xl font-bold text-fairy-blue mb-3">海洋队</h2>
+                
+                <!-- 积分显示 -->
+                <div class="text-center mb-5">
+                    <span class="text-[clamp(2.5rem,8vw,4rem)] font-bold text-purple-800 point-value" id="points-1">0</span>
+                    <span class="text-purple-600 text-lg">魔法值</span>
+                </div>
+                
+                <!-- 操作按钮 -->
+                <div class="flex justify-center gap-4">
+                    <button class="add-points bg-green-500 text-white w-12 h-12 rounded-full flex items-center justify-center btn-fairy" data-team="1">
+                        <i class="fa fa-magic text-lg"></i>
+                        <span class="ml-1">+1</span>
+                    </button>
+                    <button class="subtract-points bg-red-400 text-white w-12 h-12 rounded-full flex items-center justify-center btn-fairy" data-team="1">
+                        <i class="fa fa-bolt text-lg"></i>
+                        <span class="ml-1">-1</span>
+                    </button>
+                    <button class="reset-points bg-gray-300 text-gray-700 w-12 h-12 rounded-full flex items-center justify-center btn-fairy" data-team="1">
+                        <i class="fa fa-refresh text-lg"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 小组2 - 粉色童话风格 -->
+            <div class="team-card bg-white fairy-border p-6 fairy-shadow relative overflow-hidden transition-all duration-500 hover:translate-y-[-5px]" data-team="2">
+                <!-- 装饰元素 -->
+                <div class="absolute top-2 left-2 text-fairy-pink opacity-70 float">
+                    <i class="fa fa-heart"></i>
+                </div>
+                
+                <!-- 排名徽章 -->
+                <div class="rank-badge absolute -top-4 left-1/2 transform -translate-x-1/2 w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-lg" id="rank-2">
+                    <i class="fa fa-crown crown"></i>
+                </div>
+                
+                <!-- 小组图标 -->
+                <div class="w-20 h-20 bg-fairy-pink/20 rounded-full flex items-center justify-center mx-auto mb-4 mt-2">
+                    <i class="fa fa-flower text-3xl text-fairy-pink"></i>
+                </div>
+                
+                <!-- 小组名称 -->
+                <h2 class="text-center text-xl font-bold text-fairy-pink mb-3">花朵队</h2>
+                
+                <!-- 积分显示 -->
+                <div class="text-center mb-5">
+                    <span class="text-[clamp(2.5rem,8vw,4rem)] font-bold text-purple-800 point-value" id="points-2">0</span>
+                    <span class="text-purple-600 text-lg">魔法值</span>
+                </div>
+                
+                <!-- 操作按钮 -->
+                <div class="flex justify-center gap-4">
+                    <button class="add-points bg-green-500 text-white w-12 h-12 rounded-full flex items-center justify-center btn-fairy" data-team="2">
+                        <i class="fa fa-magic text-lg"></i>
+                        <span class="ml-1">+1</span>
+                    </button>
+                    <button class="subtract-points bg-red-400 text-white w-12 h-12 rounded-full flex items-center justify-center btn-fairy" data-team="2">
+                        <i class="fa fa-bolt text-lg"></i>
+                        <span class="ml-1">-1</span>
+                    </button>
+                    <button class="reset-points bg-gray-300 text-gray-700 w-12 h-12 rounded-full flex items-center justify-center btn-fairy" data-team="2">
+                        <i class="fa fa-refresh text-lg"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 小组3 - 绿色童话风格 -->
+            <div class="team-card bg-white fairy-border p-6 fairy-shadow relative overflow-hidden transition-all duration-500 hover:translate-y-[-5px]" data-team="3">
+                <!-- 装饰元素 -->
+                <div class="absolute top-2 left-2 text-fairy-green opacity-70 float">
+                    <i class="fa fa-leaf"></i>
+                </div>
+                
+                <!-- 排名徽章 -->
+                <div class="rank-badge absolute -top-4 left-1/2 transform -translate-x-1/2 w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-lg" id="rank-3">
+                    <i class="fa fa-crown crown"></i>
+                </div>
+                
+                <!-- 小组图标 -->
+                <div class="w-20 h-20 bg-fairy-green/20 rounded-full flex items-center justify-center mx-auto mb-4 mt-2">
+                    <i class="fa fa-tree text-3xl text-fairy-green"></i>
+                </div>
+                
+                <!-- 小组名称 -->
+                <h2 class="text-center text-xl font-bold text-fairy-green mb-3">森林队</h2>
+                
+                <!-- 积分显示 -->
+                <div class="text-center mb-5">
+                    <span class="text-[clamp(2.5rem,8vw,4rem)] font-bold text-purple-800 point-value" id="points-3">0</span>
+                    <span class="text-purple-600 text-lg">魔法值</span>
+                </div>
+                
+                <!-- 操作按钮 -->
+                <div class="flex justify-center gap-4">
+                    <button class="add-points bg-green-500 text-white w-12 h-12 rounded-full flex items-center justify-center btn-fairy" data-team="3">
+                        <i class="fa fa-magic text-lg"></i>
+                        <span class="ml-1">+1</span>
+                    </button>
+                    <button class="subtract-points bg-red-400 text-white w-12 h-12 rounded-full flex items-center justify-center btn-fairy" data-team="3">
+                        <i class="fa fa-bolt text-lg"></i>
+                        <span class="ml-1">-1</span>
+                    </button>
+                    <button class="reset-points bg-gray-300 text-gray-700 w-12 h-12 rounded-full flex items-center justify-center btn-fairy" data-team="3">
+                        <i class="fa fa-refresh text-lg"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 小组4 - 紫色童话风格 -->
+            <div class="team-card bg-white fairy-border p-6 fairy-shadow relative overflow-hidden transition-all duration-500 hover:translate-y-[-5px]" data-team="4">
+                <!-- 装饰元素 -->
+                <div class="absolute top-2 left-2 text-fairy-purple opacity-70 float">
+                    <i class="fa fa-star"></i>
+                </div>
+                
+                <!-- 排名徽章 -->
+                <div class="rank-badge absolute -top-4 left-1/2 transform -translate-x-1/2 w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-lg" id="rank-4">
+                    <i class="fa fa-crown crown"></i>
+                </div>
+                
+                <!-- 小组图标 -->
+                <div class="w-20 h-20 bg-fairy-purple/20 rounded-full flex items-center justify-center mx-auto mb-4 mt-2">
+                    <i class="fa fa-moon-o text-3xl text-fairy-purple"></i>
+                </div>
+                
+                <!-- 小组名称 -->
+                <h2 class="text-center text-xl font-bold text-fairy-purple mb-3">星空队</h2>
+                
+                <!-- 积分显示 -->
+                <div class="text-center mb-5">
+                    <span class="text-[clamp(2.5rem,8vw,4rem)] font-bold text-purple-800 point-value" id="points-4">0</span>
+                    <span class="text-purple-600 text-lg">魔法值</span>
+                </div>
+                
+                <!-- 操作按钮 -->
+                <div class="flex justify-center gap-4">
+                    <button class="add-points bg-green-500 text-white w-12 h-12 rounded-full flex items-center justify-center btn-fairy" data-team="4">
+                        <i class="fa fa-magic text-lg"></i>
+                        <span class="ml-1">+1</span>
+                    </button>
+                    <button class="subtract-points bg-red-400 text-white w-12 h-12 rounded-full flex items-center justify-center btn-fairy" data-team="4">
+                        <i class="fa fa-bolt text-lg"></i>
+                        <span class="ml-1">-1</span>
+                    </button>
+                    <button class="reset-points bg-gray-300 text-gray-700 w-12 h-12 rounded-full flex items-center justify-center btn-fairy" data-team="4">
+                        <i class="fa fa-refresh text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 批量操作区域 - 童话风格 -->
+        <div class="bg-white fairy-border p-6 fairy-shadow text-center relative overflow-hidden">
+            <!-- 装饰元素 -->
+            <div class="absolute top-3 left-3 text-fairy-yellow/70 float">
+                <i class="fa fa-star"></i>
+            </div>
+            <div class="absolute top-3 right-3 text-fairy-pink/70 float" style="animation-delay: 0.5s;">
+                <i class="fa fa-heart"></i>
+            </div>
+            
+            <h3 class="text-xl font-bold text-purple-800 mb-4">魔法操作</h3>
+            <div class="flex flex-wrap justify-center gap-4">
+                <button id="reset-all" class="bg-gray-200 hover:bg-gray-300 text-purple-800 px-6 py-3 rounded-full transition-all duration-300 flex items-center shadow-md hover:shadow-lg">
+                    <i class="fa fa-magic mr-2"></i> 全部重置
+                </button>
+                <button id="save-data" class="bg-fairy-blue hover:bg-blue-300 text-white px-6 py-3 rounded-full transition-all duration-300 flex items-center shadow-md hover:shadow-lg">
+                    <i class="fa fa-book mr-2"></i> 保存魔法值
+                </button>
+                <button id="load-data" class="bg-fairy-purple hover:bg-purple-300 text-white px-6 py-3 rounded-full transition-all duration-300 flex items-center shadow-md hover:shadow-lg">
+                    <i class="fa fa-scroll mr-2"></i> 读取魔法值
+                </button>
+            </div>
+        </div>
+        
+        <!-- 操作提示 -->
+        <div class="mt-8 text-center text-purple-600 text-sm">
+            <p>✨ 魔法值会被魔法书记录，刷新页面不会消失哦 ✨</p>
+        </div>
+    </div>
 
+    <script>
+        // 初始化积分数据
+        let teamPoints = {
+            1: 0,
+            2: 0,
+            3: 0,
+            4: 0
+        };
+        
+        // 从本地存储加载数据
+        function loadFromLocalStorage() {
+            const savedData = localStorage.getItem('fairyClassroomPoints');
+            if (savedData) {
+                teamPoints = JSON.parse(savedData);
+                // 更新UI
+                for (let team in teamPoints) {
+                    document.getElementById(`points-${team}`).textContent = teamPoints[team];
+                }
+                updateRanks();
+            }
+        }
+        
+        // 保存数据到本地存储
+        function saveToLocalStorage() {
+            localStorage.setItem('fairyClassroomPoints', JSON.stringify(teamPoints));
+            showNotification('魔法值已记录在魔法书中！');
+        }
+        
+        // 显示童话风格通知
+        function showNotification(message) {
+            // 创建通知元素
+            const notification = document.createElement('div');
+            notification.className = 'fixed bottom-6 right-6 bg-white fairy-border p-4 shadow-lg z-50 transition-all duration-500 transform translate-y-20 opacity-0 flex items-center gap-2';
+            notification.innerHTML = `
+                <i class="fa fa-star text-fairy-yellow animate-pulse text-xl"></i>
+                <span class="text-purple-800 font-medium">${message}</span>
+            `;
+            
+            // 添加到页面
+            document.body.appendChild(notification);
+            
+            // 显示动画
+            setTimeout(() => {
+                notification.classList.remove('translate-y-20', 'opacity-0');
+            }, 100);
+            
+            // 3秒后隐藏
+            setTimeout(() => {
+                notification.classList.add('translate-y-20', 'opacity-0');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 500);
+            }, 3000);
+        }
+        
+        // 更新排名和皇冠颜色
+        function updateRanks() {
+            // 创建排序数组
+            const teamsArray = [];
+            for (let team in teamPoints) {
+                teamsArray.push({
+                    team: parseInt(team),
+                    points: teamPoints[team]
+                });
+            }
+            
+            // 按积分降序排序
+            teamsArray.sort((a, b) => b.points - a.points);
+            
+            // 童话风格的皇冠颜色
+            const crownColors = [
+                'bg-fairy-yellow text-purple-800', // 第一名 - 金色皇冠
+                'bg-gray-200 text-gray-700',      // 第二名 - 银色皇冠
+                'bg-amber-700 text-white',        // 第三名 - 铜色皇冠
+                'bg-gray-400 text-white'          // 第四名 - 灰色皇冠
+            ];
+            
+            // 更新排名显示
+            teamsArray.forEach((team, index) => {
+                // 更新排名徽章
+                const rankElement = document.getElementById(`rank-${team.team}`);
+                rankElement.className = 'rank-badge absolute -top-4 left-1/2 transform -translate-x-1/2 w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg';
+                rankElement.classList.add(...crownColors[index].split(' '));
+                rankElement.innerHTML = `<i class="fa fa-crown crown"></i>`;
+                
+                // 调整卡片顺序（大屏幕）
+                const teamCard = document.querySelector(`.team-card[data-team="${team.team}"]`);
+                const container = document.getElementById('teams-container');
+                
+                // 只在大屏幕上调整顺序
+                if (window.innerWidth >= 1024) {
+                    // 移除后重新添加以改变顺序
+                    container.removeChild(teamCard);
+                    container.insertBefore(teamCard, container.children[index]);
+                    
+                    // 给前三名添加特殊效果
+                    teamCard.classList.remove('ring-4', 'ring-fairy-yellow', 'ring-fairy-pink', 'ring-amber-700');
+                    if (index === 0) {
+                        teamCard.classList.add('ring-4', 'ring-fairy-yellow');
+                    } else if (index === 1) {
+                        teamCard.classList.add('ring-4', 'ring-fairy-pink');
+                    } else if (index === 2) {
+                        teamCard.classList.add('ring-4', 'ring-amber-700');
+                    }
+                }
+            });
+        }
+        
+        // 加分操作（魔法增加）
+        document.querySelectorAll('.add-points').forEach(button => {
+            button.addEventListener('click', function() {
+                const team = this.getAttribute('data-team');
+                const pointsElement = document.getElementById(`points-${team}`);
+                const teamCard = this.closest('.team-card');
+                
+                // 增加积分
+                teamPoints[team]++;
+                pointsElement.textContent = teamPoints[team];
+                
+                // 添加动画效果
+                pointsElement.classList.add('point-pulse');
+                setTimeout(() => {
+                    pointsElement.classList.remove('point-pulse');
+                }, 600);
+                
+                // 创建"+1"上升动画
+                const plusOne = document.createElement('span');
+                plusOne.className = 'plus-one';
+                plusOne.textContent = '+1';
+                plusOne.style.left = `${this.offsetLeft + this.offsetWidth/2}px`;
+                plusOne.style.top = `${this.offsetTop}px`;
+                teamCard.appendChild(plusOne);
+                
+                // 动画结束后移除元素
+                setTimeout(() => {
+                    teamCard.removeChild(plusOne);
+                }, 1000);
+                
+                // 创建魔法粒子效果
+                createMagicParticles(this, 'green');
+                
+                // 更新排名和保存数据
+                updateRanks();
+                saveToLocalStorage();
+            });
+        });
+        
+        // 扣分操作（魔法减少）
+        document.querySelectorAll('.subtract-points').forEach(button => {
+            button.addEventListener('click', function() {
+                const team = this.getAttribute('data-team');
+                const pointsElement = document.getElementById(`points-${team}`);
+                const teamCard = this.closest('.team-card');
+                
+                // 确保积分不会低于0
+                if (teamPoints[team] > 0) {
+                    teamPoints[team]--;
+                    pointsElement.textContent = teamPoints[team];
+                    
+                    // 添加动画效果
+                    pointsElement.classList.add('point-pulse');
+                    setTimeout(() => {
+                        pointsElement.classList.remove('point-pulse');
+                    }, 600);
+                    
+                    // 创建"-1"上升动画
+                    const minusOne = document.createElement('span');
+                    minusOne.className = 'plus-one';
+                    minusOne.textContent = '-1';
+                    minusOne.style.color = '#ef4444';
+                    minusOne.style.left = `${this.offsetLeft + this.offsetWidth/2}px`;
+                    minusOne.style.top = `${this.offsetTop}px`;
+                    teamCard.appendChild(minusOne);
+                    
+                    // 动画结束后移除元素
+                    setTimeout(() => {
+                        teamCard.removeChild(minusOne);
+                    }, 1000);
+                    
+                    // 创建魔法粒子效果
+                    createMagicParticles(this, 'red');
+                    
+                    // 更新排名和保存数据
+                    updateRanks();
+                    saveToLocalStorage();
+                }
+            });
+        });
+        
+        // 清零操作
+        document.querySelectorAll('.reset-points').forEach(button => {
+            button.addEventListener('click', function() {
+                const team = this.getAttribute('data-team');
+                const pointsElement = document.getElementById(`points-${team}`);
+                
+                // 重置积分
+                teamPoints[team] = 0;
+                pointsElement.textContent = teamPoints[team];
+                
+                // 添加动画效果
+                pointsElement.classList.add('point-pulse');
+                setTimeout(() => {
+                    pointsElement.classList.remove('point-pulse');
+                }, 600);
+                
+                // 创建魔法粒子效果
+                createMagicParticles(this, 'blue');
+                
+                // 更新排名和保存数据
+                updateRanks();
+                saveToLocalStorage();
+                
+                const teamNames = ['海洋队', '花朵队', '森林队', '星空队'];
+                showNotification(`${teamNames[team-1]}的魔法值已重置！`);
+            });
+        });
+        
+        // 全部清零
+        document.getElementById('reset-all').addEventListener('click', function() {
+            if (confirm('确定要重置所有队伍的魔法值吗？')) {
+                // 重置所有积分
+                for (let team in teamPoints) {
+                    teamPoints[team] = 0;
+                    document.getElementById(`points-${team}`).textContent = 0;
+                    
+                    // 添加动画效果
+                    const pointsElement = document.getElementById(`points-${team}`);
+                    pointsElement.classList.add('point-pulse');
+                    setTimeout(() => {
+                        pointsElement.classList.remove('point-pulse');
+                    }, 600);
+                }
+                
+                // 创建魔法效果
+                createMagicParticles(this, 'purple');
+                
+                // 更新排名和保存数据
+                updateRanks();
+                saveToLocalStorage();
+                
+                showNotification('所有队伍的魔法值已重置！');
+            }
+        });
+        
+        // 保存数据按钮
+        document.getElementById('save-data').addEventListener('click', function() {
+            createMagicParticles(this, 'blue');
+            saveToLocalStorage();
+        });
+        
+        // 加载数据按钮
+        document.getElementById('load-data').addEventListener('click', function() {
+            createMagicParticles(this, 'purple');
+            loadFromLocalStorage();
+            showNotification('已读取保存的魔法值！');
+        });
+        
+        // 创建魔法粒子效果
+        function createMagicParticles(element, color) {
+            const colors = {
+                green: ['#4ade80', '#86efac', '#a7f3d0'],
+                red: ['#fca5a5', '#f87171', '#ef4444'],
+                blue: ['#93c5fd', '#60a5fa', '#3b82f6'],
+                purple: ['#c4b5fd', '#a78bfa', '#8b5cf6']
+            };
+            
+            const rect = element.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            
+            // 创建10个粒子
+            for (let i = 0; i < 10; i++) {
+                const particle = document.createElement('div');
+                const size = Math.random() * 8 + 4;
+                const colorIndex = Math.floor(Math.random() * colors[color].length);
+                
+                particle.className = 'absolute rounded-full pointer-events-none';
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.backgroundColor = colors[color][colorIndex];
+                particle.style.left = `${x}px`;
+                particle.style.top = `${y}px`;
+                particle.style.transform = 'translate(-50%, -50%)';
+                particle.style.opacity = '0.8';
+                particle.style.zIndex = '100';
+                particle.style.transition = 'all 0.6s ease-out';
+                
+                document.body.appendChild(particle);
+                
+                // 随机方向
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * 40 + 20;
+                const destX = Math.cos(angle) * distance;
+                const destY = Math.sin(angle) * distance;
+                
+                // 应用动画
+                setTimeout(() => {
+                    particle.style.transform = `translate(calc(-50% + ${destX}px), calc(-50% + ${destY}px))`;
+                    particle.style.opacity = '0';
+                }, 10);
+                
+                // 移除粒子
+                setTimeout(() => {
+                    document.body.removeChild(particle);
+                }, 600);
+            }
+        }
+        
+        // 页面加载时初始化
+        window.addEventListener('DOMContentLoaded', function() {
+            loadFromLocalStorage();
+            updateRanks();
+        });
+    </script>
+
+
+    </body></html>
